@@ -25,6 +25,7 @@
 
 <script>
 import axios from "axios";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -35,12 +36,19 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["mostrarLoading", "ocultarLoading"]),
+
     async getBitcoin(dia) {
       let arrayFecha = dia.split(["-"]);
       let ddmmyyyy = arrayFecha[2] + "-" + arrayFecha[1] + "-" + arrayFecha[0];
       console.log(ddmmyyyy);
 
       try {
+        this.mostrarLoading({
+          titulo: "Accediendo a informacion",
+          color: "secondary"
+        });
+
         let datos = await axios.get(
           `https://mindicador.cl/api/bitcoin/${ddmmyyyy}`
         );
@@ -54,6 +62,7 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
+        this.ocultarLoading();
       }
     }
   },
